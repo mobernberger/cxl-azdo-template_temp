@@ -1,0 +1,23 @@
+variables:
+  terraformDocsVersion: "0.17.0"
+  terraformVersion: "1.7.4"
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: CheckTerraformLinting
+    jobs:
+    - job: Check_Terraform_Linting
+      steps:
+        - checkout: self
+          persistCredentials: "true"        
+
+        #tflint
+        - script: |
+            curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+            tflint --init --config .azdo-pipelines/tflint/.tflint.hcl
+          displayName: 'Install and init tflint'
+        - script: |
+            tflint --recursive --minimum-failure-severity=error
+          displayName: 'Run tflint'
