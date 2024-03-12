@@ -72,4 +72,16 @@ stages:
             git add "*.md" "*.tf"
             git commit -m "Update Terraform files"
             git push origin HEAD:$(Build.SourceBranchName)
+            # Fetch the latest tags from the remote repository
+            git fetch --tags
+            # Get the latest tag
+            latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+            # Delete the remote tag
+            git push --delete origin $latest_tag
+            # Delete the local tag
+            git tag -d $latest_tag
+            # Create a new tag with the same name pointing to the latest commit
+            git tag $latest_tag
+            # Push the new tag to the remote repository
+            git push origin $latest_tag
           displayName: 'Commit and Push updated Terraform files for module directory'
