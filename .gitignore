@@ -38,3 +38,4 @@ terraform.rc
 **/.vscode/*
 **/.infracost
 .DS_Store
+.terraform.lock.hcl
